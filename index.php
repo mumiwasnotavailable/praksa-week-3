@@ -1,10 +1,17 @@
+<?php
+include "config.php";
+
+$sql = "SELECT * FROM sportasi";
+$result = mysqli_query($conn, $sql);
+?>
+
 <!DOCTYPE html>
 <html lang="bs">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Week 3 - Dan 1</title>
+    <title>Week 3 - Dan 4/6</title>
 
     <style>
         body {
@@ -21,16 +28,19 @@
             padding: 45px 20px;
         }
 
-        header h1 {
-            margin-bottom: 10px;
-        }
-
         main {
             width: 90%;
-            max-width: 900px;
+            max-width: 1100px;
             margin: 40px auto;
         }
-
+        .success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border-left: 5px solid #198754;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+}
         .box {
             background-color: white;
             padding: 24px;
@@ -44,69 +54,143 @@
             margin-top: 0;
         }
 
-        li {
-            margin-bottom: 8px;
+        .top-link {
+            display: inline-block;
+            background-color: #0d6efd;
+            color: white;
+            padding: 11px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-bottom: 18px;
+        }
+
+        .top-link:hover {
+            background-color: #0a58ca;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e7f0ff;
+            color: #0d6efd;
+        }
+
+        tr:hover {
+            background-color: #f4f7fb;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 7px;
+            color: white;
+            text-decoration: none;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        .edit-btn {
+            background-color: #198754;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+        }
+
+        .edit-btn:hover {
+            background-color: #146c43;
+        }
+
+        .delete-btn:hover {
+            background-color: #bb2d3b;
         }
     </style>
 </head>
 
 <body>
 
-    <?php
-        $ime = "Muamer";
-        $sedmica = 3;
-        $dan = 1;
-        $tema = "Backend osnove - PHP";
-
-        $sportasi = [
-            "Cristiano Ronaldo",
-            "Lionel Messi",
-            "Novak Đoković",
-            "LeBron James"
-        ];
-    ?>
-
     <header>
-        <h1>Prva PHP stranica</h1>
-        <p>Week 3 - Dan 1: Backend osnove</p>
+        <h1>SportBase PHP</h1>
+        <p>Week 3 - Prikaz, uređivanje i brisanje podataka</p>
     </header>
 
     <main>
+        <?php if (isset($_GET["poruka"])): ?>
+    <?php if ($_GET["poruka"] == "obrisan"): ?>
+        <div class="success">
+            Sportaš je uspješno obrisan.
+        </div>
+    <?php elseif ($_GET["poruka"] == "uredjen"): ?>
+        <div class="success">
+            Podaci o sportašu su uspješno uređeni.
+        </div>
+    <?php endif; ?>
+    <?php endif; ?>
         <section class="box">
-            <h2>Osnovni podaci</h2>
+            <h2>Lista sportaša iz baze</h2>
 
-            <p>Ime studenta: <strong><?php echo $ime; ?></strong></p>
-            <p>Sedmica prakse: <strong><?php echo $sedmica; ?></strong></p>
-            <p>Dan: <strong><?php echo $dan; ?></strong></p>
-            <p>Tema: <strong><?php echo $tema; ?></strong></p>
-        </section>
+            <a class="top-link" href="create.php">Dodaj novog sportaša</a>
 
-        <section class="box">
-            <h2>Uslov u PHP-u</h2>
+            <?php if (mysqli_num_rows($result) > 0): ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ime</th>
+                            <th>Sport</th>
+                            <th>Država</th>
+                            <th>Godina rođenja</th>
+                            <th>Uspjeh</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
 
-            <?php if ($dan == 1): ?>
-                <p>Danas učimo osnove PHP-a, varijable, uslove i petlje.</p>
+                    <tbody>
+                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                            <tr>
+                                <td><?php echo $row["id"]; ?></td>
+                                <td><?php echo $row["ime"]; ?></td>
+                                <td><?php echo $row["sport"]; ?></td>
+                                <td><?php echo $row["drzava"]; ?></td>
+                                <td><?php echo $row["godina_rodjenja"]; ?></td>
+                                <td><?php echo $row["uspjeh"]; ?></td>
+                                <td>
+                                    <a class="edit-btn" href="edit.php?id=<?php echo $row["id"]; ?>">
+                                        Uredi
+                                    </a>
+
+                                    <a class="delete-btn" href="delete.php?id=<?php echo $row["id"]; ?>">
+                                        Obriši
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
             <?php else: ?>
-                <p>Danas radimo neki drugi backend zadatak.</p>
+                <p>Nema podataka u bazi.</p>
             <?php endif; ?>
         </section>
 
         <section class="box">
-            <h2>Lista sportaša</h2>
-
-            <ul>
-                <?php foreach ($sportasi as $sportas): ?>
-                    <li><?php echo $sportas; ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </section>
-
-        <section class="box">
-            <h2>Zaključak</h2>
+            <h2>Objašnjenje</h2>
 
             <p>
-                Ova stranica prikazuje osnovni dinamički sadržaj pomoću PHP-a.
-                Korištene su varijable, uslov i foreach petlja.
+                Ova stranica prikazuje podatke iz MySQL baze. Dodana je kolona
+                za akcije, kroz koju se može otvoriti stranica za uređivanje ili
+                brisanje pojedinačnog zapisa.
             </p>
         </section>
     </main>

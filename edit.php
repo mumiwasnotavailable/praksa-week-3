@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       WHERE id = $id";
 
         if (mysqli_query($conn, $updateSql)) {
-            header("Location: dan4.php?poruka=uredjen");
+            header("Location: index.php?poruka=uredjen");
             exit();
         } else {
             $poruka = "Greška pri uređivanju: " . mysqli_error($conn);
@@ -194,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit">Spremi izmjene</button>
             </form>
 
-            <a href="dan4.php">Nazad na listu sportaša</a>
+            <a href="index.php">Nazad na listu sportaša</a>
         </section>
 
     </main>

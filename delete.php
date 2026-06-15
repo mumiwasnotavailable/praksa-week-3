@@ -7,7 +7,7 @@ if (isset($_GET["id"])) {
     $sql = "DELETE FROM sportasi WHERE id = $id";
 
     if (mysqli_query($conn, $sql)) {
-        header("Location: dan4.php?poruka=obrisan");
+        header("Location: index.php?poruka=obrisan");
         exit();
     } else {
         echo "Greška pri brisanju: " . mysqli_error($conn);

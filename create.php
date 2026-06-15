@@ -156,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit">Spremi sportaša</button>
             </form>
 
-            <a href="dan4.php">Nazad na listu sportaša</a>
+            <a href="index.php">Nazad na listu sportaša</a>
         </section>
     </main>
 
